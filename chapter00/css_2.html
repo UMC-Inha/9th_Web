@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Complex Layout - Flex & Grid</title>
+    <style>
+        /* 리셋 및 기본 설정 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            font-weight: bold;
+            font-size: 2.5rem;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* BEM 방법론 적용 */
+        .layout {
+            display: grid;
+            grid-template-rows: auto 1fr auto auto;
+            height: 100vh;
+        }
+
+        /* 헤더 섹션 - Flex 활용 */
+        .header {
+            display: flex;
+            height: 120px;
+        }
+
+        .header__section {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            letter-spacing: 2px;
+        }
+
+        .header__section--dark {
+            background-color: #2c3e50;
+        }
+
+        .header__section--red {
+            background-color: #e74c3c;
+        }
+
+        /* 히어로 섹션 */
+        .hero {
+            background-color: #5dade2;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            letter-spacing: 3px;
+            min-height: 350px;
+        }
+
+        /* 메인 컨텐츠 영역 - Grid 활용 */
+        .content {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            min-height: 400px;
+        }
+
+        .content__main {
+            background-color: #34495e;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            letter-spacing: 2px;
+        }
+
+        .content__spacer {
+            background-color: #f8f9fa;
+        }
+
+        .content__sidebar {
+            display: grid;
+            grid-template-rows: 1fr 1fr;
+        }
+
+        .content__image {
+            background-color: #85c1e9;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #2c3e50;
+            letter-spacing: 2px;
+        }
+
+        .content__extra {
+            background-color: #52c41a;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            letter-spacing: 2px;
+        }
+
+        /* 배너 섹션 */
+        .banner {
+            background-color: #f1c40f;
+            height: 150px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #2c3e50;
+            letter-spacing: 3px;
+        }
+
+        /* 반응형 미디어 쿼리 */
+        @media (max-width: 768px) {
+            body {
+                font-size: 1.8rem;
+            }
+            
+            .content {
+                grid-template-columns: 1fr;
+                grid-template-rows: 1fr auto 1fr;
+            }
+            
+            .content__sidebar {
+                grid-template-columns: 1fr 1fr;
+                grid-template-rows: 1fr;
+            }
+            
+            .header {
+                flex-direction: column;
+                height: auto;
+            }
+            
+            .header__section {
+                min-height: 80px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            body {
+                font-size: 1.4rem;
+            }
+            
+            .content__sidebar {
+                grid-template-columns: 1fr;
+                grid-template-rows: 1fr 1fr;
+            }
+        }
+
+        /* 호버 효과 추가 */
+        .header__section:hover,
+        .content__main:hover,
+        .content__image:hover,
+        .content__extra:hover,
+        .hero:hover,
+        .banner:hover {
+            opacity: 0.9;
+            transform: scale(1.01);
+            transition: all 0.3s ease;
+        }
+
+        /* 애니메이션 효과 */
+        .layout > * {
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* 각 섹션별 지연 애니메이션 */
+        .header { animation-delay: 0.1s; }
+        .hero { animation-delay: 0.2s; }
+        .content { animation-delay: 0.3s; }
+        .banner { animation-delay: 0.4s; }
+    </style>
+</head>
+<body>
+    <div class="layout">
+        <!-- 헤더 영역: Flex 사용 -->
+        <header class="header">
+            <div class="header__section header__section--dark">HEADER</div>
+            <div class="header__section header__section--red">MENU</div>
+        </header>
+
+        <!-- 히어로 섹션 -->
+        <section class="hero">
+            HERO
+        </section>
+
+        <!-- 메인 컨텐츠 영역: Grid 사용 -->
+        <main class="content">
+            <div class="content__main">MAIN</div>
+            <div class="content__spacer"></div>
+            <div class="content__sidebar">
+                <div class="content__image">IMAGE</div>
+                <div class="content__extra">EXTRA</div>
+            </div>
+        </main>
+
+        <!-- 배너 영역 -->
+        <footer class="banner">
+            BANNER
+        </footer>
+    </div>
+
+    <script>
+        // 간단한 상호작용 추가
+        document.addEventListener('DOMContentLoaded', function() {
+            const sections = document.querySelectorAll('[class*="__"]');
+            
+            sections.forEach(section => {
+                section.addEventListener('click', function() {
+                    console.log(`Clicked on: ${this.textContent || this.className}`);
+                    
+                    // 클릭 효과
+                    this.style.transform = 'scale(0.95)';
+                    setTimeout(() => {
+                        this.style.transform = '';
+                    }, 150);
+                });
+            });
+
+            // 키보드 네비게이션
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'r' || e.key === 'R') {
+                    location.reload();
+                }
+            });
+        });
+    </script>
+</body>
+</html>
