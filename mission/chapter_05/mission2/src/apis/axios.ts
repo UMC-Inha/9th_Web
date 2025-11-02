@@ -1,6 +1,6 @@
 import axios from "axios";
 import { LOCAL_STORAGE_KEY } from "../constants/key";
-
+import type { InternalAxiosRequestConfig } from "axios";
 const baseURL = import.meta.env.VITE_SERVER_API_URL;
 
 export const axiosInstance = axios.create({
@@ -32,7 +32,9 @@ axiosInstance.interceptors.request.use(
 axiosInstance.interceptors.response.use(
   (response) => response,
   async (error) => {
-    const originalRequest: any = error.config;
+    const originalRequest = error.config as InternalAxiosRequestConfig & {
+      _retry?: boolean;
+    };
 
     // 1) 401 아니면 그냥 실패
     if (error.response?.status !== 401) {
