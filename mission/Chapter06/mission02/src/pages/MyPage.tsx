@@ -3,21 +3,12 @@ import { getMyInfo } from "../apis/auth";
 import { type ResponseMyInfoDto } from "../types/auth";
 import { useAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
+import { useGetMyInfo } from "../hooks/useGetMyInfo";
 
 const MyPage = () => {
   const { logout } = useAuth();
   const navigate = useNavigate();
-  const [data, setData] = useState<ResponseMyInfoDto>([]);
-  useEffect(() => {
-    const getData = async () => {
-      const response = await getMyInfo();
-      console.log(response);
-
-      setData(response);
-    };
-
-    getData();
-  }, []);
+  const {data} = useGetMyInfo();
 
   const handleLogout = async () => {
     await logout();
