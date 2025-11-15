@@ -18,7 +18,17 @@ function usePostLike() {
         lp,
       ]);
 
-      const newLpPost = { ...previousLpPost };
+      //피드백 반영 : 완전히 새로운 객체(newLpPost)를 만들어 Optimistic Update에서만 사용한다.
+      const newLpPost: ResponseLpDto = {
+        //전체 외부 필드 복사
+        ...previousLpPost!,
+        data: {
+          //data 객체 자체도 새로운 객체로 만들어 참조 끊기
+          ...previousLpPost!.data,
+          //likes 배열을 깊은 복사
+          likes: [...previousLpPost!.data.likes],
+        },
+      };
 
       const me = queryClient.getQueryData<ResponseMyInfoDto>([
         QUERY_KEY.myInfo,
