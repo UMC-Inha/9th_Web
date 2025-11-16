@@ -19,7 +19,7 @@ export default function LoginPage() {
     validate: validateSignin,
   });
 
-  // 구글 콜백 "?token=" 지원(프로젝트 기존 로직 유지)
+
   useEffect(() => {
     const url = new URL(window.location.href);
     const token = url.searchParams.get("token");

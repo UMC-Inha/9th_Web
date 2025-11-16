@@ -1,4 +1,3 @@
-// src/hooks/mutations/useSignin.ts
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { postSignin } from "../../apis/auth";
 import { setAccessToken } from "../../apis/token";

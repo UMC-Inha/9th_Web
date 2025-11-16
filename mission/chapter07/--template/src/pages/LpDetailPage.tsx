@@ -80,12 +80,10 @@ export default function LpDetailPage() {
       setShowAuthModal(true);
       return;
     }
-    // isLiking 중이면 중복 클릭 방지
     if (isLiking) return;
     
     toggleLike(isLiked, {
       onError: (err: any) => {
-        // 409 에러는 이미 처리되었으므로 알림 표시 안 함
         if (err?.response?.status !== 409) {
           alert(err instanceof Error ? err.message : "좋아요 처리 중 오류가 발생했습니다.");
         }
