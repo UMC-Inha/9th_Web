@@ -1,16 +1,25 @@
 import { Link, useNavigate } from "react-router-dom";
-import { useAuthUser } from "../hooks/useAuthUser";
+import { useMe } from "../hooks/queries/useMe";
+import { useSignout } from "../hooks/mutations/useSignout";
 
 type Props = { onToggleSidebar?: () => void };
 
 export default function Navbar({ onToggleSidebar }: Props) {
   const nav = useNavigate();
-  const { user, loading, logout } = useAuthUser();
+  const { mutate: signout } = useSignout();
+  const { data: me, isPending } = useMe();
 
   const onLogout = () => {
-    logout();
-    nav("/login");
+    signout(undefined, {
+      onSuccess: () => {
+        nav("/login", { replace: true });
+      },
+    });
   };
+
+  const avatarSrc = me?.avatar
+    ? `${me.avatar}?t=${me?.updatedAt ?? Date.now()}` // ✅ 템플릿 리터럴 수정
+    : null;
 
   return (
     <header className="sticky top-0 z-50 bg-neutral-900 border-b border-neutral-800">
@@ -23,7 +32,6 @@ export default function Navbar({ onToggleSidebar }: Props) {
             onClick={onToggleSidebar}
             className="p-1.5 rounded-md hover:bg-neutral-800 focus:outline-none focus:ring-2 focus:ring-neutral-500"
           >
-            {/* 버거 아이콘 (camelCase 속성) */}
             <svg width="24" height="24" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
               <path
                 fill="none"
@@ -60,17 +68,25 @@ export default function Navbar({ onToggleSidebar }: Props) {
             </svg>
           </button>
 
-          {loading ? (
+          {isPending ? (
             <div className="h-5 w-40 bg-neutral-800 rounded animate-pulse" />
-          ) : user ? (
+          ) : me ? (
             <>
+              {/* 아바타(선택) */}
+              {avatarSrc && (
+                <button onClick={() => nav("/my")} className="h-8 w-8 rounded-full overflow-hidden">
+                  <img src={avatarSrc} alt="avatar" className="h-full w-full object-cover" />
+                </button>
+              )}
+
               <button
                 onClick={() => nav("/my")}
                 className="text-neutral-100 hover:text-white"
                 title="마이페이지로 이동"
               >
-                {user.name}님 반갑습니다.
+                {me.name}님 반갑습니다.
               </button>
+
               <button
                 onClick={onLogout}
                 className="px-3 py-1.5 rounded-md border border-neutral-600 text-neutral-100 hover:bg-neutral-800 focus:outline-none focus:ring-2 focus:ring-neutral-500"
