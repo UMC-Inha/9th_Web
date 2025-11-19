@@ -18,7 +18,13 @@ function useDeleteLike() {
         lp,
       ]);
 
-      const newLpPost = { ...previousLpPost };
+      const newLpPost: ResponseLpDto = {
+        ...previousLpPost!,
+        data: {
+          ...previousLpPost!.data,
+          likes: [...previousLpPost!.data.likes],
+        },
+      };
 
       const me = queryClient.getQueryData<ResponseMyInfoDto>([
         QUERY_KEY.myInfo,
@@ -26,15 +32,13 @@ function useDeleteLike() {
       const userId = Number(me?.data.id);
 
       const Index =
-        previousLpPost?.data.likes.findIndex(
-          (like) => like.userId === userId
-        ) ?? -1;
+        newLpPost?.data.likes.findIndex((like) => like.userId === userId) ?? -1;
 
       if (Index >= 0) {
-        previousLpPost?.data.likes.splice(Index, 1);
+        newLpPost?.data.likes.splice(Index, 1);
       } else {
         const newLike = { userId, lpId: lp } as Likes;
-        previousLpPost?.data.likes.push(newLike);
+        newLpPost?.data.likes.push(newLike);
       }
 
       queryClient.setQueryData([QUERY_KEY.lps, lp], newLpPost);
