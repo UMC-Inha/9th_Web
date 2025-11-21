@@ -1,0 +1,202 @@
+@import "tailwindcss";
+
+/* 기본 Normalize + 초기 세팅 */
+
+/* 
+  html, body에 100dvh를 지정하여 
+  모바일 환경에서도 뷰포트 높이를 정확히 맞춤.
+  기본 margin/padding 제거 및 배경색은 글로벌 토큰 사용.
+*/
+html,
+body {
+  height: 100dvh; /* 뷰포트 단위 높이 확보 */
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden; /* 가로 스크롤 방지 */
+  overflow-y: auto; /* 세로 스크롤 허용 */
+  background-color: var(--color-bg-white);
+}
+
+/* 
+  body는 컨텐츠에 따라 확장될 수 있도록 min-height를 추가.
+  html과 달리 height: 100%를 지정해 flex 레이아웃 등에 대응.
+*/
+body {
+  min-height: 100dvh;
+  height: 100%;
+  overflow-x: hidden;
+}
+
+/* 버튼은 기본적으로 클릭 가능한 상태를 보장 */
+button {
+  cursor: pointer;
+}
+
+@font-face {
+  font-family: "NunitoSans";
+  src: url("/fonts/NunitoSans-VariableFont.ttf") format("truetype");
+  font-weight: 200 1000;
+  font-style: normal;
+  font-display: swap;
+}
+
+* {
+  font-family: "NunitoSans";
+}
+
+@theme {
+  --color-black: #000000;
+  --color-white: #ffffff;
+  --color-bg-white: #f5f6fa;
+  --color-bg-dark: #1b2431;
+  --color-gray-50: #f5f6fa;
+  --color-gray-100: #eaeaea;
+  --color-gray-200: #d5d5d5;
+  --color-gray-300: #b9b9b9;
+  --color-gray-400: #a6a6a6;
+  --color-gray-500: #979797;
+  --color-gray-600: #646464;
+  --color-gray-700: #5c5c5c;
+  --color-gray-800: #565656;
+  --color-gray-900: #404040;
+  --color-primary-50: #c0d2f0;
+  --color-primary-100: #7cb7f5;
+  --color-primary-200: #6c99ff;
+  --color-primary-300: #5a8cff;
+  --color-primary-400: #4d88ef;
+  --color-primary-500: #4880ff;
+  --color-primary-600: #1685fb;
+  --color-primary-700: #4379ee;
+  --color-primary-800: #4c60e1;
+  --color-primary-900: #283988;
+  --color-dark-blue-100: #4b5668;
+  --color-dark-blue-200: #313d4f;
+  --color-dark-blue-400: #273142;
+  --color-dark-blue-500: #2d384b;
+  --color-dark-blue-600: #12163c;
+  --color-dark-blue-900: #202224;
+  --color-purple-100: #e3b9ff;
+  --color-purple-200: #dba5ff;
+  --color-purple-300: #d456fd;
+  --color-purple-400: #ba29ff;
+  --color-purple-500: #8280ff;
+  --color-purple-600: #7551e9;
+  --color-purple-800: #6226ef;
+  --color-red-200: #e98f8f;
+  --color-red-300: #f57c7c;
+  --color-red-400: #fd5454;
+  --color-red-500: #ef3826;
+  --color-red-600: #ff0000;
+  --color-red-700: #ea0234;
+  --color-dark-gray-400: #2e2e2e;
+  --color-dark-gray-500: #141414;
+  --color-pink-50: #ffe2e6;
+  --color-pink-100: #ffe5f0;
+  --color-pink-200: #ffbdd8;
+  --color-pink-300: #ff84b7;
+  --color-pink-400: #ff5da0;
+  --color-pink-500: #fc3e81;
+  --color-pink-600: #fc3e81;
+  --color-pink-700: #e951bf;
+  --color-pink-800: #a32147;
+  --color-pink-900: #882853;
+  --color-orange-100: #fd9a56;
+  --color-orange-200: #fd9e28;
+  --color-orange-300: #ff7f27;
+  --color-orange-400: #ff9066;
+  --color-orange-500: #ff8743;
+  --color-orange-600: #e99151;
+  --color-orange-700: #d37b64;
+  --color-yellow-300: #ffd56d;
+  --color-yellow-400: #fec53d;
+  --color-yellow-500: #fcbe2d;
+  --color-yellow-600: #e9c157;
+  --color-green-50: #d0f1fa;
+  --color-green-100: #bdeee1;
+  --color-green-200: #4ad991;
+  --color-green-300: #54ddac;
+  --color-green-400: #1ccab8;
+  --color-green-500: #00b69b;
+}
+
+@layer utilities {
+  .hero {
+    font-size: 46px;
+    font-weight: 800;
+  }
+
+  .title-37 {
+    font-size: 37px;
+    font-weight: 1000;
+  }
+
+  .title-32 {
+    font-size: 32px;
+    font-weight: 700;
+  }
+
+  .title-28 {
+    font-size: 28px;
+    font-weight: 700;
+  }
+
+  .title-24 {
+    font-size: 24px;
+    font-weight: 700;
+  }
+
+  .title-22 {
+    font-size: 22px;
+    font-weight: 700;
+  }
+
+  .title-20 {
+    font-size: 20px;
+    font-weight: 700;
+  }
+
+  .title-18 {
+    font-size: 18px;
+    font-weight: 700;
+  }
+
+  .title-16 {
+    font-size: 16px;
+    font-weight: 700;
+  }
+
+  .title-14 {
+    font-size: 14px;
+    font-weight: 700;
+  }
+
+  .title-12 {
+    font-size: 12px;
+    font-weight: 700;
+  }
+
+  .title-10 {
+    font-size: 10px;
+    font-weight: 700;
+  }
+
+  .body-16 {
+    font-size: 16px;
+    font-weight: 600;
+  }
+
+  .body-14 {
+    font-size: 14px;
+    font-weight: 500;
+  }
+
+  .body-12 {
+    font-size: 12px;
+    font-weight: 500;
+  }
+
+  .caption {
+    font-size: 14px;
+    font-weight: 500;
+  }
+}
