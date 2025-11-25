@@ -1,19 +1,34 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useDebounce } from "../hooks/useDebounce";
+import { useThrottle } from "../hooks/useThrottle";
 import { useSearchLpsQuery } from "../hooks/queries/useSearchLpsQuery";
 
 export default function SearchPage() {
   const [search, setSearch] = useState("");
+  const [scrollY, setScrollY] = useState(0);
 
-  // 🔥 debounce 적용 (300ms 권장)
   const debouncedQuery = useDebounce(search, 300);
+  const throttledScrollY = useThrottle(scrollY, 300);
 
-  // 🔥 검색 hook 연동
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading } =
     useSearchLpsQuery(debouncedQuery);
 
-  // 평탄화
   const flat = data?.pages?.flatMap((p) => p.data.data) ?? [];
+
+  useEffect(() => {
+    const handleScroll = () => setScrollY(window.scrollY);
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  useEffect(() => {
+    if (!hasNextPage || isFetchingNextPage) return;
+
+    const { scrollTop, clientHeight, scrollHeight } = document.documentElement;
+    const nearBottom = scrollHeight - (scrollTop + clientHeight) < 120;
+
+    if (nearBottom) fetchNextPage();
+  }, [throttledScrollY, hasNextPage, isFetchingNextPage, fetchNextPage]);
 
   return (
     <div className="max-w-3xl mx-auto p-6">
@@ -24,10 +39,8 @@ export default function SearchPage() {
         className="border px-3 py-2 w-full rounded"
       />
 
-      {/* 요청 중일 때 */}
       {isLoading && debouncedQuery && <p>검색 중...</p>}
 
-      {/* 검색 결과 */}
       <div className="mt-6 space-y-3">
         {flat.map((lp) => (
           <div key={lp.id} className="p-4 border rounded">
@@ -36,7 +49,6 @@ export default function SearchPage() {
           </div>
         ))}
 
-        {/* 더보기 */}
         {hasNextPage && (
           <button
             onClick={() => fetchNextPage()}
