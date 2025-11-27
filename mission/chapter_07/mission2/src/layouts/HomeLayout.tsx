@@ -1,41 +1,50 @@
-// src/layouts/HomeLayout.tsx
 import { Outlet, Link, useLocation, useNavigate } from "react-router-dom";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import { useAuth } from "../contexts/AuthContext.js";
 import Sidebar from "../components/Sidebar.js";
 import burgerIcon from "../assets/svg.png";
-import { useLogoutMutation } from "../hooks/queries/useLogoutMutation.js"; // ⭐ 추가
+import { useLogoutMutation } from "../hooks/queries/useLogoutMutation.js";
+import { useSidebar } from "../hooks/useSidebar";
 
 const HomeLayout = () => {
   const { isAuthed, user } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
 
-  const [isOpen, setIsOpen] = useState(false);
   const sheetRef = useRef<HTMLDivElement | null>(null);
+  const { isOpen, open, close, toggle } = useSidebar(false);
 
-  const logoutMutation = useLogoutMutation(); // ⭐ useMutation 호출
+  const logoutMutation = useLogoutMutation();
 
   const handleLogout = async () => {
-    await logoutMutation.mutateAsync(); // ⭐ 로그아웃 요청
+    await logoutMutation.mutateAsync();
   };
 
-  // 라우트 변경 시 모달형 사이드바 자동 닫기
   useEffect(() => {
-    setIsOpen(false);
-  }, [location.pathname]);
+    close();
+  }, [location.pathname, close]);
 
-  // 바깥 클릭/ESC 로 닫기
   useEffect(() => {
-    /* 생략 (기존 코드 유지) */
-  }, [isOpen]);
+    if (!isOpen) return;
+
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        sheetRef.current &&
+        !sheetRef.current.contains(event.target as Node)
+      ) {
+        close();
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [isOpen, close]);
 
   return (
     <div className="h-dvh flex flex-col">
-      {/* Header */}
       <nav className="bg-pink-200 flex justify-between items-center px-4 py-3">
         <div className="flex items-center gap-3">
-          <button onClick={() => setIsOpen(true)} className="md:hidden">
+          <button onClick={toggle} className="md:hidden">
             <img src={burgerIcon} alt="메뉴" className="w-7 h-7" />
           </button>
           <h1
@@ -47,7 +56,6 @@ const HomeLayout = () => {
         </div>
 
         {!isAuthed ? (
-          /* 로그인 안 했을 때 */
           <div className="flex gap-2">
             <Link
               to="/login"
@@ -63,7 +71,6 @@ const HomeLayout = () => {
             </Link>
           </div>
         ) : (
-          /* 로그인 했을 때 */
           <div className="flex items-center gap-3">
             <span className="text-sm md:text-base">
               <b>{user?.name}</b>님 반갑습니다.
@@ -84,10 +91,7 @@ const HomeLayout = () => {
         )}
       </nav>
 
-      {/* Body */}
-      {/* ... 나머지는 기존 코드 그대로 유지 ... */}
       <div className="flex flex-1 relative">
-        {/* 데스크탑 사이드바 */}
         <aside
           id="app-sidebar"
           className="hidden md:block w-60 shrink-0 border-r border-gray-200"
@@ -98,6 +102,24 @@ const HomeLayout = () => {
         <main className="flex-1 p-4">
           <Outlet />
         </main>
+      </div>
+
+      <div
+        className={`md:hidden fixed inset-0 z-40 transition-opacity duration-300 ${
+          isOpen
+            ? "opacity-100 pointer-events-auto"
+            : "opacity-0 pointer-events-none"
+        }`}
+      >
+        <div className="absolute inset-0 bg-black/40" onClick={close} />
+        <div
+          ref={sheetRef}
+          className={`absolute inset-y-0 left-0 w-64 bg-white shadow-xl p-4 transition-transform duration-300 ease-out ${
+            isOpen ? "translate-x-0" : "-translate-x-full"
+          }`}
+        >
+          <Sidebar onNavigate={close} />
+        </div>
       </div>
     </div>
   );
