@@ -3,15 +3,17 @@ import CartList from "./components/CartList";
 import Navbar from "./components/Navbar";
 import PriceBox from "./components/PriceBox";
 import Modal from "./components/Modal";
-import { useSelector } from "./hooks/useCustomRedux";
+import { useModalInfo } from "./hooks/useCartStore";
+
 function App() {
-  const { isOpen } = useSelector((state) => state.modal);
+  const isModalOpen = useModalInfo();
+
   return (
     <>
       <Navbar />
       <CartList />
       <PriceBox />
-      {isOpen && <Modal />}
+      {isModalOpen && <Modal />}
     </>
   );
 }

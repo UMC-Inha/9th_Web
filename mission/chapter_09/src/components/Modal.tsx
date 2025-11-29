@@ -1,26 +1,36 @@
-import { useDispatch } from "../hooks/useCustomRedux";
-import { closeModal } from "../slices/modalSlice";
-import { clearCart } from "../slices/cartSlice";
+import { useCartActions } from "../hooks/useCartStore";
 
 const Modal = () => {
-  const dispatch = useDispatch();
+  const { clearCart, closeModal } = useCartActions();
 
   const handleNo = () => {
-    dispatch(closeModal());
+    closeModal();
   };
 
   const handleYes = () => {
-    dispatch(clearCart());
-    dispatch(closeModal());
+    clearCart();
+    closeModal();
+  };
+
+  const handleOverlayClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (e.target === e.currentTarget) {
+      closeModal();
+    }
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center">
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center"
+      onClick={handleOverlayClick}
+    >
       {/* 오버레이 */}
-      <div className="absolute inset-0 bg-black/20" />
+      <div className="absolute inset-0 bg-black/60" />
 
       {/* 모달 컨텐츠 */}
-      <div className="relative bg-white rounded-lg p-8 max-w-md w-full mx-4 z-10">
+      <div
+        className="relative bg-white rounded-lg p-8 max-w-md w-full mx-4 z-10 shadow-2xl"
+        onClick={(e) => e.stopPropagation()}
+      >
         <h2 className="text-2xl font-bold mb-4">장바구니 비우기</h2>
         <p className="text-gray-600 mb-6">
           정말로 장바구니의 모든 상품을 삭제하시겠습니까?
