@@ -16,6 +16,7 @@ const CartItem = ({ lp }: CartItemProps) => {
   const handleDecrease = () => {
     if (lp.amount === 1) {
       dispatch(removeItem({ id: lp.id }));
+      return;
     }
 
     dispatch(decrease({ id: lp.id }));
