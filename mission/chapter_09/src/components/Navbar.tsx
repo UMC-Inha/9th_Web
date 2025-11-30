@@ -1,14 +1,8 @@
 import { FaShoppingCart } from "react-icons/fa";
-import { useEffect } from "react";
-import { useCartActions, useCartInfo } from "../hooks/useCartStore";
+import { useCartInfo } from "../hooks/useCartStore";
 
 const Navbar = () => {
-  const { amount, cartItems } = useCartInfo();
-  const { calculateTotals } = useCartActions();
-
-  useEffect(() => {
-    calculateTotals();
-  }, [cartItems, calculateTotals]);
+  const { amount } = useCartInfo();
 
   return (
     <div className="flex justify-between items-center p-4 bg-pink-500 text-white">

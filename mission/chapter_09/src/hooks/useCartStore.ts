@@ -17,12 +17,27 @@ const calculateInitialTotals = (items: CartItems) => {
 
 const initialTotals = calculateInitialTotals(cartItems);
 
+// 합계 계산 헬퍼 함수
+const calculateTotalsHelper = (state: {
+  cartItems: CartItems;
+  amount: number;
+  total: number;
+}) => {
+  let amount = 0;
+  let total = 0;
+  state.cartItems.forEach((item) => {
+    amount += item.amount;
+    total += item.amount * item.price;
+  });
+  state.amount = amount;
+  state.total = total;
+};
+
 interface CartActions {
   increase: (id: string) => void;
   decrease: (id: string) => void;
   removeItem: (id: string) => void;
   clearCart: () => void;
-  calculateTotals: () => void;
 }
 
 interface ModalActions {
@@ -51,6 +66,7 @@ export const useCartStore = create<CartState>()(
           if (cartItem) {
             cartItem.amount += 1;
           }
+          calculateTotalsHelper(state);
         });
       },
       decrease: (id: string) => {
@@ -65,11 +81,13 @@ export const useCartStore = create<CartState>()(
               );
             }
           }
+          calculateTotalsHelper(state);
         });
       },
       removeItem: (id: string) => {
         set((state) => {
           state.cartItems = state.cartItems.filter((item) => item.id !== id);
+          calculateTotalsHelper(state);
         });
       },
       clearCart: () => {
@@ -77,18 +95,6 @@ export const useCartStore = create<CartState>()(
           state.cartItems = [];
           state.amount = 0;
           state.total = 0;
-        });
-      },
-      calculateTotals: () => {
-        set((state) => {
-          let amount = 0;
-          let total = 0;
-          state.cartItems.forEach((item) => {
-            amount += item.amount;
-            total += item.amount * item.price;
-          });
-          state.amount = amount;
-          state.total = total;
         });
       },
       openModal: () => {

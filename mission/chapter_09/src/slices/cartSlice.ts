@@ -33,6 +33,7 @@ const cartSlice = createSlice({
       const itemId = action.payload.id;
       const item = state.cartItems.find((cartItem) => cartItem.id === itemId);
       if (item) item.amount++;
+      cartSlice.caseReducers.calculateTotals(state);
     },
     decrease: (state, action: PayloadAction<{ id: string }>) => {
       const itemId = action.payload.id;
@@ -45,12 +46,14 @@ const cartSlice = createSlice({
           );
         }
       }
+      cartSlice.caseReducers.calculateTotals(state);
     },
     removeItem: (state, action: PayloadAction<{ id: string }>) => {
       const itemId = action.payload.id;
       state.cartItems = state.cartItems.filter(
         (cartItem) => cartItem.id !== itemId
       );
+      cartSlice.caseReducers.calculateTotals(state);
     },
     clearCart: (state) => {
       state.cartItems = [];
