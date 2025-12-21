@@ -1,3 +1,4 @@
+import { memo } from 'react'
 import './MovieSearchForm.css'
 
 interface MovieTitleInputProps {
@@ -6,6 +7,8 @@ interface MovieTitleInputProps {
 }
 
 function MovieTitleInput({ value, onChange }: MovieTitleInputProps) {
+  console.log('MovieTitleInput 렌더링')
+  
   return (
     <div className="form-group">
       <label htmlFor="movie-title">영화 제목</label>
@@ -21,5 +24,5 @@ function MovieTitleInput({ value, onChange }: MovieTitleInputProps) {
   )
 }
 
-export default MovieTitleInput
+export default memo(MovieTitleInput)
 

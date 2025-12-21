@@ -1,3 +1,4 @@
+import { memo, useCallback, useMemo } from 'react'
 import type { Movie } from '../../services/tmdbApi'
 import './MovieDetailModal.css'
 
@@ -8,18 +9,25 @@ interface MovieDetailModalProps {
 }
 
 function MovieDetailModal({ movie, isOpen, onClose }: MovieDetailModalProps) {
+  console.log('MovieDetailModal 렌더링', movie?.title)
+  
   if (!isOpen || !movie) return null
 
-  const handleImdbSearch = () => {
+  const handleImdbSearch = useCallback(() => {
     const imdbUrl = `https://www.imdb.com/find?q=${encodeURIComponent(movie.title)}`
     window.open(imdbUrl, '_blank')
-  }
+  }, [movie.title])
 
-  const handleBackdropClick = (e: React.MouseEvent<HTMLDivElement>) => {
+  const handleBackdropClick = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
     if (e.target === e.currentTarget) {
       onClose()
     }
-  }
+  }, [onClose])
+
+  // 평점 포맷팅 메모이제이션
+  const formattedRating = useMemo(() => {
+    return movie.vote_average.toFixed(1)
+  }, [movie.vote_average])
 
   return (
     <div className="modal-backdrop" onClick={handleBackdropClick}>
@@ -44,7 +52,7 @@ function MovieDetailModal({ movie, isOpen, onClose }: MovieDetailModalProps) {
           <div className="modal-meta">
             <div className="modal-rating">
               <span className="rating-label">평점</span>
-              <span className="rating-value">{movie.vote_average.toFixed(1)}</span>
+              <span className="rating-value">{formattedRating}</span>
             </div>
             {movie.release_date && (
               <div className="modal-release-date">
@@ -81,5 +89,5 @@ function MovieDetailModal({ movie, isOpen, onClose }: MovieDetailModalProps) {
   )
 }
 
-export default MovieDetailModal
+export default memo(MovieDetailModal)
 

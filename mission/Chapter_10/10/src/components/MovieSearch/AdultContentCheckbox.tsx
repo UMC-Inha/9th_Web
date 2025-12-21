@@ -1,3 +1,4 @@
+import { memo } from 'react'
 import './MovieSearchForm.css'
 
 interface AdultContentCheckboxProps {
@@ -6,6 +7,8 @@ interface AdultContentCheckboxProps {
 }
 
 function AdultContentCheckbox({ checked, onChange }: AdultContentCheckboxProps) {
+  console.log('AdultContentCheckbox 렌더링')
+  
   return (
     <div className="form-group">
       <label htmlFor="adult-content" className="checkbox-label">
@@ -22,5 +25,5 @@ function AdultContentCheckbox({ checked, onChange }: AdultContentCheckboxProps) 
   )
 }
 
-export default AdultContentCheckbox
+export default memo(AdultContentCheckbox)
 

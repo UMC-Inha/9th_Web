@@ -1,3 +1,4 @@
+import { memo } from 'react'
 import './MovieSearchForm.css'
 
 interface LanguageSelectProps {
@@ -6,6 +7,8 @@ interface LanguageSelectProps {
 }
 
 function LanguageSelect({ value, onChange }: LanguageSelectProps) {
+  console.log('LanguageSelect 렌더링')
+  
   return (
     <div className="form-group">
       <label htmlFor="language">언어</label>
@@ -23,5 +26,5 @@ function LanguageSelect({ value, onChange }: LanguageSelectProps) {
   )
 }
 
-export default LanguageSelect
+export default memo(LanguageSelect)
 
