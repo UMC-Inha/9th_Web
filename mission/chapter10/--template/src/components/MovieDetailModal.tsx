@@ -1,4 +1,4 @@
-import { memo, useEffect } from 'react';
+import { memo, useEffect, type MouseEvent } from 'react';
 import type { MovieDetail } from '../types/movie';
 import { poster, backdrop } from '../lib/tmdb';
 
@@ -21,7 +21,7 @@ const MovieDetailModal = memo(({ movie, onClose }: MovieDetailModalProps) => {
 
   if (!movie) return null;
 
-  const handleBackdropClick = (e: React.MouseEvent<HTMLDivElement>) => {
+  const handleBackdropClick = (e: MouseEvent<HTMLDivElement>) => {
     if (e.target === e.currentTarget) {
       onClose();
     }

@@ -1,4 +1,4 @@
-import { memo, FormEvent } from 'react';
+import { memo, type FormEvent } from 'react';
 
 interface MovieSearchFormProps {
   searchQuery: string;
